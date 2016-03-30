@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>h5-platform</title>
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="ab header">
+  
+  </div>
+  <div class="ab content">
+    <!-- 页面管理区域 -->
+    <div class="ab pages-zone">
+      <div class="inner">
+        <ul>
+          <li v-for="(index, page) in pages"
+              @click="activePage(index)"
+              :class="{active: index == currentPage}">
+            <span>页面{{index}}</span>
+            <i @click="removePage(index)">x</i>
+          </li>
+        </ul>
+        <div class="btn-wrap">
+          <button class="btn" @click="addPage">增加页面</button>          
+        </div>
+      </div>
+    </div>
+    <div class="ab edit-zone">
+      <div class="edit-area-wrap">
+        <div class="edit-area">
+          <div class="ab page" 
+               v-for="(index, page) in pages"
+               :class="{active: index == currentPage}"
+               :style="page.style"
+               >
+              <span>页面{{index}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ab tool-zone">
+      <div class="item-wrap">
+        <div class="item">
+          <label>背景色</label>
+          <input type="color" v-model="backgroundColor">
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="lib/vue.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
