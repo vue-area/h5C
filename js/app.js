@@ -69,13 +69,13 @@ var app = new Vue({
       }
     },
     activePage: function(){
+      console.log('current page', this.currentPage);
       return this.pages[this.currentPage];
     } 
   },
   watch:{
     pages: {
       handler: function (pages) {
-        console.log(this.currentPage);
         todoStorage.save(pages);
       },
       deep: true      

@@ -5,5 +5,31 @@ Vue.component('hy-text',{
 
 Vue.component('hy-text-view',{
   template: '#hyTextView',
-  props:["textComponent"]
+  props:["textComponents"],
+  data: function(){
+    return {
+      currentIndex: 0
+    }
+  },
+  watch:{
+    currentIndex: function(){
+      var that = this;
+      this.textComponents = this.textComponents.map(function(item, index){
+        if(index == that.currentIndex){
+          item.active = true;
+        }
+        else{
+          item.active = false;
+        }
+        return item;
+      });
+    }
+  },
+  computed:{},
+  methods: {
+    updateCurrentIndex: function(index){
+      this.currentIndex = index;
+      console.log(this.currentIndex);
+    }
+  }
 });

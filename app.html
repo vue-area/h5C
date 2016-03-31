@@ -36,9 +36,7 @@
                :class="{active: index == currentPage}"
                :style="page.style">
               <hy-text-view 
-                class="text-component"
-                v-for="textComponent in page.textComponents"
-                :text-component="textComponent">
+                :text-components="page.textComponents">
               </hy-text-view>
           </div>
         </div>
@@ -77,8 +75,18 @@
   </div>  
 </script>
 <script id="hyTextView" type="x/template">
-  <div :style="textComponent.style" 
-        @click="textComponent.active = !textComponent.active">{{textComponent.text}}</div>  
+  <div 
+    class="text-component"
+    v-for="textComponent in textComponents"
+    >
+      <div :style="textComponent.style" 
+            @dblclick="textComponent.active = !textComponent.active"
+            @click="updateCurrentIndex($index)"
+            >
+        {{textComponent.text + '|' + $index}}
+      </div>                  
+  </div>
+
 </script>
 
 <script src="lib/vue.js"></script>
