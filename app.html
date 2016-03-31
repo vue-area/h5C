@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>h5-platform</title>
   <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="css/component.css">
   <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -15,8 +16,8 @@
     <div class="ab pages-zone">
       <div class="inner">
         <ul>
-          <li v-for="(index, page) in pages"
-              @click="activePage(index)"
+          <li v-for="(index, page) in pages " track-by="$index"
+              @click="updateCurrentPage(index)"
               :class="{active: index == currentPage}">
             <span>页面{{index}}</span>
             <i @click="removePage(index)">x</i>
@@ -31,25 +32,57 @@
       <div class="edit-area-wrap">
         <div class="edit-area">
           <div class="ab page" 
-               v-for="(index, page) in pages"
+               v-for="(index, page) in pages" track-by="$index"
                :class="{active: index == currentPage}"
-               :style="page.style"
-               >
-              <span>页面{{index}}</span>
+               :style="page.style">
+              <hy-text-view 
+                class="text-component"
+                v-for="textComponent in page.textComponents"
+                :text-component="textComponent">
+              </hy-text-view>
           </div>
         </div>
       </div>
+      <div class="debug-zone" style="position:absolute;left:0; top:10px;">
+        <pre>{{pages|json}}</pre>
+      </div>
+      <div class="dialog-zone" style="position:absolute;right:10px; top:10px;">
+        <hy-text :active-page="activePage"> </hy-text> 
+      </div>      
     </div>
     <div class="ab tool-zone">
       <div class="item-wrap">
         <div class="item">
-          <label>背景色</label>
+          <label>背景色:</label>
           <input type="color" v-model="backgroundColor">
         </div>
+        <div class="item">
+          <label>背景图片:</label>
+          <input type="text" v-model="backgroundImage">
+        </div>     
+        <div class="item">
+          <button class="btn" @click="addTextComponent">添加文字</button>
+        </div>           
       </div>
     </div>
   </div>
+<script id="hyText" type="x/template">
+  <div class="text-component" 
+        v-for="textComponent in activePage.textComponents"
+        v-show="textComponent.active">
+    <div>
+      <label>文字:</label><input type="text" v-model="textComponent.text">
+      <label>颜色:</label><input type="color" :value="textComponent.style.color" v-model="textComponent.style.color">
+    </div>
+  </div>  
+</script>
+<script id="hyTextView" type="x/template">
+  <div :style="textComponent.style" 
+        @click="textComponent.active = !textComponent.active">{{textComponent.text}}</div>  
+</script>
+
 <script src="lib/vue.js"></script>
-<script src="app.js"></script>
+<script src="js/component.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
