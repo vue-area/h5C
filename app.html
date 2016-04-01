@@ -8,59 +8,64 @@
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-  <div class="ab header">
-  
+  <div class="f-ab g-header">
+   <h1>h5 制作工具</h1>
   </div>
-  <div class="ab content">
+  <div class="f-ab g-content">
     <!-- 页面管理区域 -->
-    <div class="ab pages-zone">
+    <div class="f-ab pages-zone">
       <div class="inner">
         <ul>
-          <li v-for="(index, page) in pages " track-by="$index"
-              @click="updateCurrentPage(index)"
-              :class="{active: index == currentPage}">
+          <li v-for="(index, page) in pages" track-by="$index"
+              @click="activePage(index)"
+              :class="{active: index == activePageIndex}">
             <span>页面{{index}}</span>
             <i @click="removePage(index)">x</i>
           </li>
         </ul>
         <div class="btn-wrap">
-          <button class="btn" @click="addPage">增加页面</button>          
+          <button class="btn" @click="addNewPage">增加页面</button>          
         </div>
       </div>
     </div>
-    <div class="ab edit-zone">
+    <div class="f-ab edit-zone">
       <div class="edit-area-wrap">
         <div class="edit-area">
-          <div class="ab page" 
+          <div class="f-ab page" 
                v-for="(index, page) in pages" track-by="$index"
-               :class="{active: index == currentPage}"
+               v-show="index == activePageIndex"
                :style="page.style">
               <component  
                 class="hy-comp"
-                v-for="(index, item) in page.comps" 
-                :is="item.type" 
-                :class="item.type"
-                v-show="item.isShow"
-                :item="item"
-                @click="updateActiveComp(item)"
+                v-for="(index, comp) in page.comps" 
+                :is="comp.type" 
+                :class="[comp.type, currentComp == comp ? 'active': '']"
+                :comp="comp"
+                @click="activeComp(comp)"
                 >
               </component >                 
           </div>
         </div>
       </div>
       <div class="debug-zone" style="position:absolute;left:0; top:10px;">
-        <pre>{{pages|json}}</pre>
+        <h2> 调试：data </h2>
+        <pre>{{$data|json}}</pre>
       </div>
       <div class="dialog-zone" style="position:absolute;right:10px; top:10px;">
           <component 
-            v-if="activeComp" 
-            :is="activeComp.type + '-edit'" 
-            :item="activeComp">
+            v-if="currentComp" 
+            :is="currentComp.type + '-edit'" 
+            :comp="currentComp">
           </component>
+          <hy-page-edit :page="currentPage">
+          </hy-page-edit>
       </div>      
     </div>
-    <div class="ab tool-zone">
+    <div class="f-ab tool-zone">
       <div class="item-wrap">
+<!--         <div class="item">
+          <button class="btn" @click="editPage">页面配置</button>
+        </div> -->          
         <div class="item">
           <button class="btn" @click="addTextComponent">添加文字</button>
         </div>     
@@ -70,7 +75,47 @@
       </div>
     </div>
   </div>
+
+<script id="hyTextEdit" type="x/template">
+  <div class="hy-comp-edit">
+    <h2>文字编辑</h2>
+    <div class="content">
+      <ul>
+        <li>
+          文字内容:<input type="text" v-model="comp.text"/>
+        </li>
+      </ul>    
+    </div>
+  </div>  
+</script>
+
+<script id="hyPageEdit" type="x/template">
+  <div class="hy-comp-edit">
+    <h2>页面编辑</h2>
+    <div class="content">
+      <ul>
+        <li>
+          背景颜色:<input type="color" v-model="page.style.backgroundColor"/>
+        </li>
+      </ul>    
+    </div>
+  </div>  
+</script>
+
+<script id="hyImageEdit" type="x/template">
+  <div class="hy-comp-edit">
+    <h2>图片编辑</h2>
+    <div class="content">
+      <ul>
+        <li>
+          image:<input type="text" v-model="comp.text"/>
+        </li>
+      </ul>    
+    </div>
+  </div>  
+</script>
 <script src="lib/vue.js"></script>
+<script src="js/component.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

@@ -9,25 +9,7 @@ var todoStorage = {
   }
 };
 
-Vue.component('hy-text', {
-  template: '<p>text:{{item.text}}</p>',
-  props: ["item"]
-});
-Vue.component('hy-text-edit', {
-  template: '<p>text:<input type="text" v-model="item.text"/></p>',
-  props: ["item"]
-});
-
-Vue.component('hy-image', {
-  template: '<p>image:{{item.text}}</p>',
-  props: ["item"]
-});
-Vue.component('hy-image-edit', {
-  template: '<p>image:<input type="text" v-model="item.text"/></p>',
-  props: ["item"]
-});
-
-var defautSetting = function() {
+var defautPageSetting = function() {
   return {
     active: true,
     style: {
@@ -42,54 +24,66 @@ var app = new Vue({
   el: 'body',
   data: {
     pages:[],
-    currentPage: 0,
-    activeComp: null
+    activePageIndex: 0,
+    currentComp: null
   },
   computed: {
     totalPage: function(){
       return this.pages.length;
+    },
+    currentPage: function(){
+      return this.pages[this.activePageIndex];
     }
+  }, 
+  methods: {
+    addNewPage: function(){
+      this.pages.push(defautPageSetting());
+      this.activePageIndex = this.totalPage - 1;
+    },
+    activePage: function(index){
+      this.activePageIndex = index;
+    },
+    removePage: function(index){
+      this.pages.splice(index, 1);
+    },
+    editPage: function(){
+
+    },
+    activeComp: function(comp) {
+      this.currentComp = comp;
+    },
+    addTextComponent: function(){
+      if(this.currentPage){
+        this.currentPage.comps.push({
+          type: 'hy-text',
+          text: 'this is text'
+        });        
+      }
+    },
+    addImageComponent: function(){
+      if(this.currentPage){
+        this.currentPage.comps.push({
+          type: 'hy-image',
+          text: 'this is text'
+        });        
+      }
+    }  
   },
   watch:{
+    // save data
     pages: {
       handler: function (pages) {
         todoStorage.save(pages);
       },
       deep: true      
     }
-  },  
-  methods: {
-    addPage: function(){
-      this.pages.push(defautSetting());
-      this.currentPage = this.totalPage - 1;
-    },
-    updateCurrentPage: function(index){
-      this.currentPage = index;
-    },
-    updateActiveComp: function(comp) {
-      this.activeComp = comp;
-    },
-    addTextComponent: function(){
-      this.pages[this.currentPage].comps.push({
-        id: '001',
-        type: 'hy-text',
-        isShow: true,
-        active: true,
-        text: 'this is text'
-      });
-    },
-    addImageComponent: function(){
-      this.pages[this.currentPage].comps.push({
-        id: '001',
-        type: 'hy-image',
-        isShow: true,
-        active: true,
-        text: 'this is text'
-      });
-    }  
-  },
+  },   
+  //  get data
   created: function(){
     var pages = todoStorage.fetch();
+    if(pages.length <= 0 ){
+      pages.push(defautPageSetting());
+    }
     this.pages = pages;
   }  
 });
