@@ -1,14 +1,31 @@
 Vue.config.debug  = true;
-var STORAGE_KEY = 'hy-sms-h5';
-
 var todoStorage = {
+  name: 'hy-sms-h5', 
   fetch: function () {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    return JSON.parse(localStorage.getItem(this.name) || '[]');
   },
   save: function (todos) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+    localStorage.setItem(this.name, JSON.stringify(todos));
   }
 };
+
+Vue.component('hy-text', {
+  template: '<p>text:{{item.text}}</p>',
+  props: ["item"]
+});
+Vue.component('hy-text-edit', {
+  template: '<p>text:<input type="text" v-model="item.text"/></p>',
+  props: ["item"]
+});
+
+Vue.component('hy-image', {
+  template: '<p>image:{{item.text}}</p>',
+  props: ["item"]
+});
+Vue.component('hy-image-edit', {
+  template: '<p>image:<input type="text" v-model="item.text"/></p>',
+  props: ["item"]
+});
 
 var defautSetting = function() {
   return {
@@ -16,62 +33,22 @@ var defautSetting = function() {
     style: {
       backgroundColor: '#ffffff',
       backgroundImage: 'none' //url("resource/bg01.png")
-    }
+    },
+    comps:[]
   }
-}
+};
 
 var app = new Vue({
-  el:'body',
-  data:{
-    pages: [],
+  el: 'body',
+  data: {
+    pages:[],
     currentPage: 0,
-    backgroundColor: '#ffffff',
-    backgroundImage: 'none'
+    activeComp: null
   },
   computed: {
     totalPage: function(){
       return this.pages.length;
-    },
-    backgroundColor:{
-      get: function(){
-        if(this.pages.length !== 0){
-          return this.pages[this.currentPage].style.backgroundColor;
-        }
-        else{
-          return '#ffffff';
-        }     
-      },
-      set: function(val){
-        if(this.pages.length !== 0){
-          this.pages[this.currentPage].style.backgroundColor = val;
-        }
-        else{
-          return '#ffffff';
-        }
-      }
-    },
-    backgroundImage:{
-      get: function(){
-        if(this.pages.length !== 0){
-          return this.pages[this.currentPage].style.backgroundImage;
-        }
-        else{
-          return '#ffffff';
-        }     
-      },
-      set: function(val){
-        if(this.pages.length !== 0){
-          this.pages[this.currentPage].style.backgroundImage = val;
-        }
-        else{
-          return '#ffffff';
-        }
-      }
-    },
-    activePage: function(){
-      console.log('current page', this.currentPage);
-      return this.pages[this.currentPage];
-    } 
+    }
   },
   watch:{
     pages: {
@@ -80,46 +57,39 @@ var app = new Vue({
       },
       deep: true      
     }
-  },
+  },  
   methods: {
     addPage: function(){
       this.pages.push(defautSetting());
       this.currentPage = this.totalPage - 1;
     },
-    removePage: function(index){
-      if (window.confirm("你确定删除页面吗？")) { 
-        this.pages.splice(index, 1);
-      }
-    },
     updateCurrentPage: function(index){
       this.currentPage = index;
     },
+    updateActiveComp: function(comp) {
+      this.activeComp = comp;
+    },
     addTextComponent: function(){
-      if(!!this.pages.length){
-        var tmp = 'pages[' + this.currentPage + '].textComponents';
-        if(!this.$get(tmp)){
-          this.$set(tmp, []);
-        }; 
-        var that = this;
-        that.$nextTick(function () {
-          // debugger;
-          that.pages[that.currentPage].textComponents.push({
-            active: false,
-            text: '文字',
-            style:{
-              fontSize: '25px',
-              color:'red'
-            }
-          });
-        });
-      }
-    }
+      this.pages[this.currentPage].comps.push({
+        id: '001',
+        type: 'hy-text',
+        isShow: true,
+        active: true,
+        text: 'this is text'
+      });
+    },
+    addImageComponent: function(){
+      this.pages[this.currentPage].comps.push({
+        id: '001',
+        type: 'hy-image',
+        isShow: true,
+        active: true,
+        text: 'this is text'
+      });
+    }  
   },
   created: function(){
     var pages = todoStorage.fetch();
-    if( pages.length === 0) {
-      pages.push(defautSetting());
-    }
     this.pages = pages;
-  }
+  }  
 });

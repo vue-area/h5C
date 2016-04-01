@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>h5-platform</title>
-  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/component.css">
-  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
   <div class="ab header">
@@ -35,9 +35,16 @@
                v-for="(index, page) in pages" track-by="$index"
                :class="{active: index == currentPage}"
                :style="page.style">
-              <hy-text-view 
-                :text-components="page.textComponents">
-              </hy-text-view>
+              <component  
+                class="hy-comp"
+                v-for="(index, item) in page.comps" 
+                :is="item.type" 
+                :class="item.type"
+                v-show="item.isShow"
+                :item="item"
+                @click="updateActiveComp(item)"
+                >
+              </component >                 
           </div>
         </div>
       </div>
@@ -45,52 +52,25 @@
         <pre>{{pages|json}}</pre>
       </div>
       <div class="dialog-zone" style="position:absolute;right:10px; top:10px;">
-        <hy-text :active-page="activePage"> </hy-text> 
+          <component 
+            v-if="activeComp" 
+            :is="activeComp.type + '-edit'" 
+            :item="activeComp">
+          </component>
       </div>      
     </div>
     <div class="ab tool-zone">
       <div class="item-wrap">
         <div class="item">
-          <label>背景色:</label>
-          <input type="color" v-model="backgroundColor">
-        </div>
-        <div class="item">
-          <label>背景图片:</label>
-          <input type="text" v-model="backgroundImage">
+          <button class="btn" @click="addTextComponent">添加文字</button>
         </div>     
         <div class="item">
-          <button class="btn" @click="addTextComponent">添加文字</button>
-        </div>           
+          <button class="btn" @click="addImageComponent">添加图片</button>
+        </div>               
       </div>
     </div>
   </div>
-<script id="hyText" type="x/template">
-  <div class="text-component" 
-        v-for="textComponent in activePage.textComponents"
-        v-show="textComponent.active">
-    <div>
-      <label>文字:</label><input type="text" v-model="textComponent.text">
-      <label>颜色:</label><input type="color" :value="textComponent.style.color" v-model="textComponent.style.color">
-    </div>
-  </div>  
-</script>
-<script id="hyTextView" type="x/template">
-  <div 
-    class="text-component"
-    v-for="textComponent in textComponents"
-    >
-      <div :style="textComponent.style" 
-            @dblclick="textComponent.active = !textComponent.active"
-            @click="updateCurrentIndex($index)"
-            >
-        {{textComponent.text + '|' + $index}}
-      </div>                  
-  </div>
-
-</script>
-
 <script src="lib/vue.js"></script>
-<script src="js/component.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

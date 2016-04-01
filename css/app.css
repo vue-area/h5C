@@ -83,7 +83,7 @@
   width:322px;
   height:612px;
   margin:40px auto;
-  background: url(img/iphone_bg2.png) no-repeat 0 0;
+  background: url(../img/iphone_bg2.png) no-repeat 0 0;
 }
 .edit-area{
   height: 488px;
@@ -97,7 +97,7 @@
 .page {
   text-align: center;
   background-color: #fff;
-  color: #fff;
+  color: #666;
   background-size: cover;
   background-position: 50% 50%;  
 }
@@ -108,4 +108,30 @@
 .tool-zone .item{
   margin:10px 0;
   text-align: center;
+}
+
+/* hy-text */
+.hy-comp{
+  border: 1px solid #ccc;
+  padding:5px;
+  cursor: pointer;
+}
+
+/* 调试输出  */
+.debug-zone {
+  position: absolute;
+  left: 0;
+  top: 10px;
+  height: 800px;
+  overflow: auto;
+  width: 260px;
+  background-color: #f5f5f5;
+  margin-left: 5px;
+  padding: 4px 2px; 
+}
+.debug-zone pre{
+  font-family: 'Roboto Mono', Monaco, courier, monospace;
+  font-size: 0.8em;
+  background-color: #f8f8f8;
+  -webkit-font-smoothing: initial;  
 }
